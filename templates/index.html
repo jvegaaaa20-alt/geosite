@@ -1,370 +1,88 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>{{ name }}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #0e0e0e;
-      --surface: #161616;
-      --border: #242424;
-      --text: #f0ede8;
-      --muted: #6b6b6b;
-      --accent: #c8f060;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    header {
-      width: 100%;
-      max-width: 520px;
-      padding: 52px 24px 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-
-    .avatar {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 20px;
-      background: var(--surface);
-      border: 2px solid var(--border);
-    }
-
-    .avatar-placeholder {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      background: var(--surface);
-      border: 2px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 38px;
-      margin-bottom: 20px;
-    }
-
-    .name {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(24px, 5vw, 36px);
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
-
-    .bio {
-      margin-top: 10px;
-      font-size: 14px;
-      color: var(--muted);
-      font-weight: 300;
-      line-height: 1.65;
-      max-width: 360px;
-    }
-
-    /* ── ФОТО СЕТКА ── */
-    .photo-section {
-      width: 100%;
-      max-width: 520px;
-      padding: 36px 24px 0;
-    }
-
-    .photo-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 5px;
-    }
-
-    .photo-grid img {
-      width: 100%;
-      aspect-ratio: 1;
-      object-fit: cover;
-      border-radius: 8px;
-    }
-
-    /* ── СОЦСЕТИ (иконки-кружочки) ── */
-    .socials-section {
-      width: 100%;
-      max-width: 520px;
-      padding: 32px 24px 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .socials-row {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .social-btn {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      transition: border-color 0.2s, background 0.2s;
-      cursor: pointer;
-    }
-
-    .social-btn:hover {
-      border-color: var(--accent);
-      background: #1c1c1c;
-    }
-
-    .social-btn svg {
-      width: 22px;
-      height: 22px;
-      fill: var(--text);
-      transition: fill 0.2s;
-    }
-
-    .social-btn:hover svg {
-      fill: var(--accent);
-    }
-
-    /* ── ССЫЛКИ ── */
-    .links-section {
-      width: 100%;
-      max-width: 520px;
-      padding: 32px 24px 0;
-    }
-
-    .section-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: var(--muted);
-      margin-bottom: 12px;
-      font-weight: 500;
-    }
-
-    .link-card {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 15px 18px;
-      margin-bottom: 8px;
-      text-decoration: none;
-      color: var(--text);
-      transition: border-color 0.2s, background 0.2s;
-    }
-
-    .link-card:hover {
-      border-color: var(--accent);
-      background: #1a1a1a;
-    }
-
-    .link-card:hover .arrow { color: var(--accent); }
-
-    .link-left {
-      display: flex;
-      align-items: center;
-      gap: 13px;
-    }
-
-    .link-icon {
-      width: 38px;
-      height: 38px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--bg);
-      border-radius: 8px;
-      border: 1px solid var(--border);
-    }
-
-    .link-icon svg {
-      width: 19px;
-      height: 19px;
-      fill: var(--text);
-    }
-
-    .link-title {
-      font-family: 'Syne', sans-serif;
-      font-weight: 600;
-      font-size: 14px;
-    }
-
-    .arrow {
-      font-size: 16px;
-      color: var(--muted);
-      transition: color 0.2s;
-    }
-
-    /* ── TG CTA ── */
-    .cta-section {
-      width: 100%;
-      max-width: 520px;
-      padding: 32px 24px 64px;
-    }
-
-    .cta-card {
-      background: var(--accent);
-      border-radius: 16px;
-      padding: 24px 22px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      text-decoration: none;
-      transition: filter 0.2s;
-    }
-
-    .cta-card:hover { filter: brightness(1.07); }
-
-    .cta-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 18px;
-      font-weight: 800;
-      color: #0e0e0e;
-    }
-
-    .cta-sub {
-      font-size: 12px;
-      color: #404040;
-      margin-top: 3px;
-    }
-
-    .cta-btn {
-      background: #0e0e0e;
-      color: var(--accent);
-      border-radius: 10px;
-      padding: 11px 20px;
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 13px;
-      white-space: nowrap;
-      text-decoration: none;
-    }
-
-    @media (max-width: 420px) {
-      .cta-card { flex-direction: column; align-items: flex-start; }
-      .photo-grid { grid-template-columns: repeat(2, 1fr); }
-    }
+    body { background: #0a0a0a; color: #fff; font-family: 'Inter', sans-serif; min-height: 100vh; max-width: 480px; margin: 0 auto; }
+    .hero { position: relative; width: 100%; aspect-ratio: 3/4; max-height: 75vh; overflow: hidden; }
+    .hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .hero-placeholder { width: 100%; height: 100%; background: #1a1a1a; }
+    .hero-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 60px 20px 24px; background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%); }
+    .hero-name { font-size: 28px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 4px; }
+    .hero-handle { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 14px; }
+    .socials-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .social-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: transform 0.15s; }
+    .social-icon:hover { transform: scale(1.1); }
+    .social-icon svg { width: 18px; height: 18px; fill: #fff; }
+    .social-icon.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+    .social-icon.telegram  { background: #229ED9; }
+    .social-icon.tiktok    { background: #010101; border: 1px solid #333; }
+    .social-icon.twitter   { background: #000; border: 1px solid #333; }
+    .social-icon.youtube   { background: #FF0000; }
+    .social-icon.onlyfans  { background: #00AFF0; }
+    .content { padding: 0 0 40px; }
+    .banner { position: relative; width: 100%; margin: 12px 0; overflow: hidden; }
+    .banner img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
+    .banner-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 40px 20px 18px; background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%); }
+    .banner-text { font-size: 16px; font-weight: 500; color: #fff; }
+    .banner-btn { position: absolute; bottom: 16px; right: 16px; width: 40px; height: 40px; border-radius: 50%; background: #229ED9; display: flex; align-items: center; justify-content: center; text-decoration: none; }
+    .banner-btn svg { width: 20px; height: 20px; fill: #fff; }
+    .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 2px; }
+    .photo-grid img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+    .cta-wrap { padding: 20px 16px 0; }
+    .cta-btn { display: block; background: #229ED9; color: #fff; text-decoration: none; border-radius: 14px; padding: 16px; text-align: center; font-weight: 600; font-size: 15px; transition: filter 0.2s; }
+    .cta-btn:hover { filter: brightness(1.1); }
   </style>
 </head>
 <body>
-
-  <!-- HEADER -->
-  <header>
-    {% if avatar_url %}
-      <img class="avatar" src="{{ avatar_url }}" alt="avatar">
-    {% else %}
-      <div class="avatar-placeholder">🤍</div>
+  <div class="hero">
+    {% if hero_url %}<img src="{{ hero_url }}" alt="{{ name }}">{% else %}<div class="hero-placeholder"></div>{% endif %}
+    <div class="hero-overlay">
+      <div class="hero-name">{{ name }}</div>
+      {% if handle %}<div class="hero-handle">{{ handle }}</div>{% endif %}
+      {% if socials %}
+      <div class="socials-row">
+        {% for s in socials %}
+        <a href="{{ s.url }}" class="social-icon {{ s.icon }}" target="_blank" rel="noopener">
+          {% if s.icon == 'instagram' %}<svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          {% elif s.icon == 'telegram' %}<svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+          {% elif s.icon == 'tiktok' %}<svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z"/></svg>
+          {% elif s.icon == 'twitter' %}<svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          {% elif s.icon == 'youtube' %}<svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          {% elif s.icon == 'onlyfans' %}<svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 4.5a7.5 7.5 0 110 15 7.5 7.5 0 010-15zm0 2a5.5 5.5 0 100 11 5.5 5.5 0 000-11z"/></svg>
+          {% endif %}
+        </a>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="content">
+    {% if banner_url %}
+    <div class="banner">
+      <img src="{{ banner_url }}" alt="">
+      <div class="banner-overlay"><div class="banner-text">{{ banner_text }}</div></div>
+      {% if tg_link %}<a href="{{ tg_link }}" class="banner-btn" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></a>{% endif %}
+    </div>
     {% endif %}
-    <h1 class="name">{{ name }}</h1>
-    {% if bio %}
-      <p class="bio">{{ bio }}</p>
-    {% endif %}
-  </header>
-
-  <!-- ФОТО СЕТКА — показывается только если хотя бы одно фото заполнено -->
-  {% if photo1 or photo2 or photo3 %}
-  <section class="photo-section">
+    {% if photo1 or photo2 or photo3 %}
     <div class="photo-grid">
       {% if photo1 %}<img src="{{ photo1 }}" alt="">{% endif %}
       {% if photo2 %}<img src="{{ photo2 }}" alt="">{% endif %}
       {% if photo3 %}<img src="{{ photo3 }}" alt="">{% endif %}
     </div>
-  </section>
-  {% endif %}
-
-  <!-- ИКОНКИ СОЦСЕТЕЙ — показываются только заполненные -->
-  {% if socials %}
-  <section class="socials-section">
-    <div class="socials-row">
-      {% for s in socials %}
-      <a href="{{ s.url }}" class="social-btn" target="_blank" rel="noopener" title="{{ s.title }}">
-        {% if s.icon == 'instagram' %}
-        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-        {% elif s.icon == 'tiktok' %}
-        <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z"/></svg>
-        {% elif s.icon == 'twitter' %}
-        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        {% elif s.icon == 'youtube' %}
-        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-        {% elif s.icon == 'onlyfans' %}
-        <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 4.5a7.5 7.5 0 110 15 7.5 7.5 0 010-15zm0 2a5.5 5.5 0 100 11 5.5 5.5 0 000-11zm-1 2.5h2v2h2v2h-2v2h-2v-2H9v-2h2z"/></svg>
-        {% elif s.icon == 'patreon' %}
-        <svg viewBox="0 0 24 24"><path d="M14.82 2.41c3.96 0 7.18 3.24 7.18 7.21 0 3.96-3.22 7.18-7.18 7.18-3.97 0-7.21-3.22-7.21-7.18 0-3.97 3.24-7.21 7.21-7.21zM2 21.6h3.5V2.41H2V21.6z"/></svg>
-        {% elif s.icon == 'website' %}
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-        {% endif %}
-      </a>
-      {% endfor %}
+    {% endif %}
+    {% if tg_link %}
+    <div class="cta-wrap">
+      <a href="{{ tg_link }}" class="cta-btn" target="_blank" rel="noopener">Chat me here 🤍</a>
     </div>
-  </section>
-  {% endif %}
-
-  <!-- ССЫЛКИ — показываются только заполненные соцсети -->
-  {% if socials %}
-  <section class="links-section">
-    <div class="section-label">Links</div>
-    {% for s in socials %}
-    <a href="{{ s.url }}" class="link-card" target="_blank" rel="noopener">
-      <div class="link-left">
-        <div class="link-icon">
-          {% if s.icon == 'instagram' %}
-          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-          {% elif s.icon == 'tiktok' %}
-          <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z"/></svg>
-          {% elif s.icon == 'twitter' %}
-          <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          {% elif s.icon == 'youtube' %}
-          <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-          {% elif s.icon == 'onlyfans' %}
-          <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 4.5a7.5 7.5 0 110 15 7.5 7.5 0 010-15zm0 2a5.5 5.5 0 100 11 5.5 5.5 0 000-11zm-1 2.5h2v2h2v2h-2v2h-2v-2H9v-2h2z"/></svg>
-          {% elif s.icon == 'patreon' %}
-          <svg viewBox="0 0 24 24"><path d="M14.82 2.41c3.96 0 7.18 3.24 7.18 7.21 0 3.96-3.22 7.18-7.18 7.18-3.97 0-7.21-3.22-7.21-7.18 0-3.97 3.24-7.21 7.21-7.21zM2 21.6h3.5V2.41H2V21.6z"/></svg>
-          {% elif s.icon == 'website' %}
-          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-          {% endif %}
-        </div>
-        <div class="link-title">{{ s.title }}</div>
-      </div>
-      <span class="arrow">↗</span>
-    </a>
-    {% endfor %}
-  </section>
-  {% endif %}
-
-  <!-- TG CTA — показывается только если TG_LINK заполнен -->
-  {% if tg_link %}
-  <section class="cta-section">
-    <a href="{{ tg_link }}" class="cta-card" target="_blank" rel="noopener">
-      <div>
-        <div class="cta-title">Join my Telegram</div>
-        <div class="cta-sub">Exclusive content, updates & more</div>
-      </div>
-      <span class="cta-btn">Join →</span>
-    </a>
-  </section>
-  {% endif %}
-
+    {% endif %}
+  </div>
 </body>
 </html>
