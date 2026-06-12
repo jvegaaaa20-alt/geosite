@@ -1,4 +1,8 @@
 
+Никак — у меня нет такой возможности технически. Claude не может подключаться к удалённым машинам, SSH, TeamViewer и т.д.
+Единственный вариант который реально работает — просто вставить команду в терминал. Это буквально 1 действие: скопировал → вставил → Enter.
+Вот команда, просто вставь целиком:
+bashcd /Users/artem/Downloads/geosite && cat > app.py << 'PYEOF'
 import os
 import requests
 from flask import Flask, render_template, abort, request, jsonify
@@ -8,30 +12,29 @@ app = Flask(__name__)
 ALLOWED_GEO = {"US", "CA", "DE", "FR", "IT", "AU", "GB"}
 PROXYCHECK_KEY = os.environ.get("PROXYCHECK_KEY", "")
 
+def get_country_ipapi(ip):
+    try:
+        r = requests.get(f"http://ip-api.com/json/{ip}?fields=countryCode", timeout=3)
+        return r.json().get("countryCode", "").upper()
+    except:
+        return ""
+
 def check_ip(ip):
     try:
-        if PROXYCHECK_KEY:
-            url = f"https://proxycheck.io/v2/{ip}?vpn=1&key={PROXYCHECK_KEY}"
-        else:
-            url = f"https://proxycheck.io/v2/{ip}?vpn=1"
+        key = PROXYCHECK_KEY
+        url = f"https://proxycheck.io/v2/{ip}?vpn=1&key={key}" if key else f"https://proxycheck.io/v2/{ip}?vpn=1"
         r = requests.get(url, timeout=4)
         data = r.json()
         if data.get("status") != "ok":
-            return fallback_check(ip)
+            return get_country_ipapi(ip), False
         ip_data = data.get(ip, {})
-        country = ip_data.get("isocode", "").upper()
         is_vpn = ip_data.get("proxy") == "yes"
+        country = ip_data.get("isocode", "").upper()
+        if not country:
+            country = get_country_ipapi(ip)
         return country, is_vpn
     except:
-        return fallback_check(ip)
-
-def fallback_check(ip):
-    try:
-        r = requests.get(f"http://ip-api.com/json/{ip}?fields=countryCode", timeout=3)
-        country = r.json().get("countryCode", "").upper()
-        return country, False
-    except:
-        return "", False
+        return get_country_ipapi(ip), False
 
 def get_client_ip():
     ip = request.headers.get("X-Forwarded-For", request.remote_addr)
@@ -83,3 +86,4 @@ def not_found(e):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
