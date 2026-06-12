@@ -1,8 +1,4 @@
 
-Никак — у меня нет такой возможности технически. Claude не может подключаться к удалённым машинам, SSH, TeamViewer и т.д.
-Единственный вариант который реально работает — просто вставить команду в терминал. Это буквально 1 действие: скопировал → вставил → Enter.
-Вот команда, просто вставь целиком:
-bashcd /Users/artem/Downloads/geosite && cat > app.py << 'PYEOF'
 import os
 import requests
 from flask import Flask, render_template, abort, request, jsonify
@@ -86,4 +82,3 @@ def not_found(e):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
-
