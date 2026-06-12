@@ -6,31 +6,13 @@ from flask import Flask, render_template, abort, request, jsonify
 app = Flask(__name__)
 
 ALLOWED_GEO = {"US", "CA", "DE", "FR", "IT", "AU", "GB"}
-PROXYCHECK_KEY = os.environ.get("PROXYCHECK_KEY", "")
 
-def get_country_ipapi(ip):
+def get_country(ip):
     try:
         r = requests.get(f"http://ip-api.com/json/{ip}?fields=countryCode", timeout=3)
         return r.json().get("countryCode", "").upper()
     except:
         return ""
-
-def check_ip(ip):
-    try:
-        key = PROXYCHECK_KEY
-        url = f"https://proxycheck.io/v2/{ip}?vpn=1&key={key}" if key else f"https://proxycheck.io/v2/{ip}?vpn=1"
-        r = requests.get(url, timeout=4)
-        data = r.json()
-        if data.get("status") != "ok":
-            return get_country_ipapi(ip), False
-        ip_data = data.get(ip, {})
-        is_vpn = ip_data.get("proxy") == "yes"
-        country = ip_data.get("isocode", "").upper()
-        if not country:
-            country = get_country_ipapi(ip)
-        return country, is_vpn
-    except:
-        return get_country_ipapi(ip), False
 
 def get_client_ip():
     ip = request.headers.get("X-Forwarded-For", request.remote_addr)
@@ -52,8 +34,8 @@ def get_socials():
 @app.route("/")
 def index():
     ip = get_client_ip()
-    country, is_vpn = check_ip(ip)
-    if is_vpn or country not in ALLOWED_GEO:
+    country = get_country(ip)
+    if country not in ALLOWED_GEO:
         abort(404)
     context = {
         "tg_link":     os.environ.get("TG_LINK", ""),
@@ -61,7 +43,7 @@ def index():
         "handle":      os.environ.get("SITE_HANDLE", ""),
         "hero_url":    os.environ.get("HERO_URL", ""),
         "banner_url":  os.environ.get("BANNER_URL", ""),
-        "banner_text": os.environ.get("BANNER_TEXT", "Exclusive content here 🤍✨"),
+        "banner_text": os.environ.get("BANNER_TEXT", "Exclusive content here"),
         "photo1":      os.environ.get("PHOTO1_URL", ""),
         "photo2":      os.environ.get("PHOTO2_URL", ""),
         "photo3":      os.environ.get("PHOTO3_URL", ""),
@@ -72,8 +54,8 @@ def index():
 @app.route("/check")
 def check():
     ip = get_client_ip()
-    country, is_vpn = check_ip(ip)
-    return jsonify({"ip": ip, "country": country, "is_vpn": is_vpn, "allowed": country in ALLOWED_GEO and not is_vpn})
+    country = get_country(ip)
+    return jsonify({"ip": ip, "country": country, "allowed": country in ALLOWED_GEO})
 
 @app.errorhandler(404)
 def not_found(e):
