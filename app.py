@@ -5,7 +5,7 @@ from flask import Flask, render_template, abort, request, jsonify
 
 app = Flask(__name__)
 
-ALLOWED_GEO = {"US", "CA", "DE", "FR", "IT", "AU", "GB"}
+ALLOWED_GEO = set(os.environ.get("ALLOWED_GEO", "US,CA,DE,FR,IT,AU,GB").upper().split(","))
 
 def get_country(ip):
     try:
