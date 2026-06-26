@@ -5,7 +5,7 @@ from flask import Flask, render_template, abort, request, jsonify
 
 app = Flask(__name__)
 
-ALLOWED_GEO = set(os.environ.get("ALLOWED_GEO", "US,CA,DE,FR,IT,AU,GB").upper().split(","))
+ALLOWED_GEO = set(os.environ.get("ALLOWED_GEO", "US,GB,CA,AU,DE,FR,IT,NL,CH,AT,SE,NO,DK,FI").upper().split(","))
 
 def get_country(ip):
     try:
@@ -38,16 +38,19 @@ def index():
     if country not in ALLOWED_GEO:
         abort(404)
     context = {
-        "tg_link":     os.environ.get("TG_LINK", ""),
-        "name":        os.environ.get("SITE_NAME", "Your Name"),
-        "handle":      os.environ.get("SITE_HANDLE", ""),
-        "hero_url":    os.environ.get("HERO_URL", ""),
-        "banner_url":  os.environ.get("BANNER_URL", ""),
-        "banner_text": os.environ.get("BANNER_TEXT", "Exclusive content here"),
-        "photo1":      os.environ.get("PHOTO1_URL", ""),
-        "photo2":      os.environ.get("PHOTO2_URL", ""),
-        "photo3":      os.environ.get("PHOTO3_URL", ""),
-        "socials":     get_socials(),
+        "tg_link":      os.environ.get("TG_LINK", ""),
+        "name":         os.environ.get("SITE_NAME", "Your Name"),
+        "handle":       os.environ.get("SITE_HANDLE", ""),
+        "hero_url":     os.environ.get("HERO_URL", ""),        # .mp4 / .webm / image
+        "banner_url":   os.environ.get("BANNER_URL", ""),      # центральный баннер (картинка)
+        "banner_text":  os.environ.get("BANNER_TEXT", "free for the next 7 days 😊"),
+        "photo1":       os.environ.get("PHOTO1_URL", ""),      # левая нижняя карточка
+        "photo1_text":  os.environ.get("PHOTO1_TEXT", "my entire life 💕"),
+        "photo2":       os.environ.get("PHOTO2_URL", ""),      # правая нижняя карточка
+        "photo2_text":  os.environ.get("PHOTO2_TEXT", "come have some fun 😊"),
+        "photo2_link":  os.environ.get("PHOTO2_LINK", ""),     # отдельная ссылка для правой карточки
+        "socials":      get_socials(),
+        "ga_id":        os.environ.get("GA_ID", ""),
     }
     return render_template("index.html", **context)
 
