@@ -1,7 +1,6 @@
-
 import os
 import requests
-from flask import Flask, render_template, abort, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect
 
 app = Flask(__name__)
 
@@ -20,37 +19,26 @@ def get_client_ip():
         ip = ip.split(",")[0].strip()
     return ip
 
-def get_socials():
-    all_socials = [
-        {"key": "INSTAGRAM", "title": "Instagram", "icon": "instagram", "url": os.environ.get("INSTAGRAM_URL", "")},
-        {"key": "TELEGRAM",  "title": "Telegram",  "icon": "telegram",  "url": os.environ.get("TG_LINK", "")},
-        {"key": "TIKTOK",    "title": "TikTok",    "icon": "tiktok",    "url": os.environ.get("TIKTOK_URL", "")},
-        {"key": "TWITTER",   "title": "Twitter/X", "icon": "twitter",   "url": os.environ.get("TWITTER_URL", "")},
-        {"key": "YOUTUBE",   "title": "YouTube",   "icon": "youtube",   "url": os.environ.get("YOUTUBE_URL", "")},
-        {"key": "ONLYFANS",  "title": "OnlyFans",  "icon": "onlyfans",  "url": os.environ.get("ONLYFANS_URL", "")},
-    ]
-    return [s for s in all_socials if s["url"].strip()]
-
 @app.route("/")
 def index():
     ip = get_client_ip()
     country = get_country(ip)
-    if country not in ALLOWED_GEO:
-        abort(404)
+
+    main_link    = os.environ.get("MAIN_LINK", "")      # разрешённое гео
+    fallback_link = os.environ.get("FALLBACK_LINK", "") # всё остальное
+
+    if country in ALLOWED_GEO:
+        cta_link = main_link
+    else:
+        cta_link = fallback_link
+
     context = {
-        "tg_link":      os.environ.get("TG_LINK", ""),
-        "name":         os.environ.get("SITE_NAME", "Your Name"),
-        "handle":       os.environ.get("SITE_HANDLE", ""),
-        "hero_url":     os.environ.get("HERO_URL", ""),        # .mp4 / .webm / image
-        "banner_url":   os.environ.get("BANNER_URL", ""),      # центральный баннер (картинка)
-        "banner_text":  os.environ.get("BANNER_TEXT", "free for the next 7 days 😊"),
-        "photo1":       os.environ.get("PHOTO1_URL", ""),      # левая нижняя карточка
-        "photo1_text":  os.environ.get("PHOTO1_TEXT", "my entire life 💕"),
-        "photo2":       os.environ.get("PHOTO2_URL", ""),      # правая нижняя карточка
-        "photo2_text":  os.environ.get("PHOTO2_TEXT", "come have some fun 😊"),
-        "photo2_link":  os.environ.get("PHOTO2_LINK", ""),     # отдельная ссылка для правой карточки
-        "socials":      get_socials(),
-        "ga_id":        os.environ.get("GA_ID", ""),
+        "name":     os.environ.get("SITE_NAME", "Lily"),
+        "subtitle": os.environ.get("SITE_SUBTITLE", "Check my exclusive content ❤️"),
+        "hero_url": os.environ.get("HERO_URL", ""),
+        "cta_text": os.environ.get("CTA_TEXT", "Exclusive content here"),
+        "cta_link": cta_link,
+        "ga_id":    os.environ.get("GA_ID", ""),
     }
     return render_template("index.html", **context)
 
@@ -59,10 +47,6 @@ def check():
     ip = get_client_ip()
     country = get_country(ip)
     return jsonify({"ip": ip, "country": country, "allowed": country in ALLOWED_GEO})
-
-@app.errorhandler(404)
-def not_found(e):
-    return "", 404
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
