@@ -5,178 +5,162 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>{{ name }}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       background: #000;
       color: #fff;
       font-family: 'Inter', sans-serif;
-      min-height: 100vh;
-      max-width: 480px;
-      margin: 0 auto;
-      overflow-x: hidden;
-    }
-    .video-hero {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 9/16;
-      max-height: 92vh;
+      height: 100vh;
       overflow: hidden;
-      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .video-hero video {
+
+    /* FULLSCREEN BG */
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+    .bg video, .bg img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
-    .video-hero::after {
+    /* dark overlay */
+    .bg::after {
       content: '';
       position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 55%;
-      background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, transparent 100%);
-      pointer-events: none;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
     }
-    .profile-overlay {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      padding: 0 18px 24px;
+
+    /* CONTENT */
+    .content {
+      position: relative;
       z-index: 2;
+      width: 100%;
+      max-width: 420px;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
     }
-    .profile-name {
-      font-size: 30px;
-      font-weight: 700;
+
+    .name {
+      font-size: 42px;
+      font-weight: 800;
       letter-spacing: -0.02em;
+      text-align: center;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: rgba(255,255,255,0.75);
+      text-align: center;
+      margin-bottom: 32px;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.5);
+    }
+
+    /* BUTTON */
+    .cta-btn {
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 3px;
+      justify-content: space-between;
+      width: 100%;
+      padding: 18px 22px;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 16px;
+      text-decoration: none;
+      color: #fff;
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      transition: background 0.2s, transform 0.15s;
     }
-    .profile-name .badge {
-      width: 22px; height: 22px;
-      background: #6c47ff;
+    .cta-btn:active {
+      background: rgba(255,255,255,0.25);
+      transform: scale(0.98);
+    }
+    .cta-btn .arrow {
+      width: 28px;
+      height: 28px;
+      background: rgba(255,255,255,0.2);
       border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       flex-shrink: 0;
     }
-    .profile-name .badge svg { width: 12px; height: 12px; fill: #fff; }
-    .profile-handle {
-      font-size: 14px;
-      color: rgba(255,255,255,0.65);
-      margin-bottom: 14px;
+    .cta-btn .arrow svg {
+      width: 14px;
+      height: 14px;
+      fill: #fff;
     }
-    .socials-row {
-      display: flex;
-      gap: 9px;
-      flex-wrap: wrap;
-      margin-bottom: 10px;
-    }
-    .social-icon {
-      width: 38px; height: 38px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      text-decoration: none;
-      transition: transform 0.15s, opacity 0.15s;
-    }
-    .social-icon:active { transform: scale(0.93); opacity: 0.8; }
-    .social-icon svg { width: 18px; height: 18px; fill: #fff; }
-    .social-icon.instagram { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
-    .social-icon.telegram  { background: #229ED9; }
-    .social-icon.tiktok    { background: #010101; border: 1px solid #444; }
-    .social-icon.twitter   { background: #000; border: 1px solid #444; }
-    .social-icon.youtube   { background: #FF0000; }
-    .social-icon.onlyfans  { background: #00AFF0; }
-    .social-icon.facebook  { background: #1877F2; }
-    .cards { padding: 10px 10px 30px; display: flex; flex-direction: column; gap: 10px; }
-    .card-main {
-      position: relative;
-      display: block;
-      width: 100%;
-      border-radius: 18px;
-      overflow: hidden;
-      text-decoration: none;
-      aspect-ratio: 16/9;
-      background: #1a1a1a;
-    }
-    .card-main img,
-    .card-main video {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .card-main .play-btn {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 64px; height: 64px;
-      background: rgba(255,255,255,0.22);
-      backdrop-filter: blur(6px);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .card-main .play-btn svg { width: 28px; height: 28px; fill: #fff; margin-left: 3px; }
-    .card-main .card-label {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      padding: 40px 16px 16px;
-      background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 100%);
-      font-size: 16px;
-      font-weight: 600;
-      color: #fff;
-    }
-    .card-main .card-link-icon,
-    .card-small .card-link-icon {
-      position: absolute;
-      top: 12px; left: 12px;
-      width: 28px; height: 28px;
-      background: rgba(0,0,0,0.5);
-      backdrop-filter: blur(4px);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .card-main .card-link-icon svg,
-    .card-small .card-link-icon svg { width: 14px; height: 14px; fill: #fff; }
-    .card-small .card-platform-icon {
-      position: absolute;
-      top: 10px; left: 10px;
-      width: 26px; height: 26px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .card-small .card-platform-icon svg { width: 14px; height: 14px; fill: #fff; }
-    .card-platform-icon.instagram { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
-    .card-platform-icon.telegram  { background: #229ED9; }
-    .card-platform-icon.onlyfans  { background: #00AFF0; }
-    .cards-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .card-small {
-      position: relative;
-      display: block;
-      border-radius: 18px;
-      overflow: hidden;
-      text-decoration: none;
-      aspect-ratio: 3/4;
-      background: #1a1a1a;
-    }
-    .card-small img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .card-small .card-label {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      padding: 36px 12px 12px;
-      background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 100%);
+
+    /* URGENCY TEXT */
+    .urgency {
       font-size: 13px;
-      font-weight: 600;
-      color: #fff;
-      line-height: 1.3;
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      margin-bottom: 12px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    /* TIMER */
+    .timer-box {
+      width: 100%;
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 16px;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+    }
+
+    .timer-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 70px;
+    }
+    .timer-num {
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    .timer-label {
+      font-size: 10px;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+    .timer-sep {
+      font-size: 32px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.5);
+      margin: 0 4px;
+      padding-bottom: 8px;
     }
   </style>
 
@@ -187,7 +171,8 @@
 </head>
 <body>
 
-  <div class="video-hero">
+  <!-- FULLSCREEN BG -->
+  <div class="bg">
     {% if hero_url %}
       {% if hero_url.endswith('.mp4') or hero_url.endswith('.webm') or hero_url.endswith('.mov') %}
         <video src="{{ hero_url }}" autoplay muted loop playsinline></video>
@@ -195,76 +180,67 @@
         <img src="{{ hero_url }}" alt="{{ name }}">
       {% endif %}
     {% endif %}
-
-    <div class="profile-overlay">
-      <div class="profile-name">
-        {{ name }}
-        <span class="badge">
-          <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-        </span>
-      </div>
-      {% if handle %}<div class="profile-handle">{{ handle }}</div>{% endif %}
-      {% if socials %}
-      <div class="socials-row">
-        {% for s in socials %}
-        <a href="{{ s.url }}" class="social-icon {{ s.icon }}" target="_blank" rel="noopener"
-           onclick="gtag('event', 'click', {event_category: 'social', event_label: '{{ s.icon }}'})">
-          {% if s.icon == 'instagram' %}<svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-          {% elif s.icon == 'telegram' %}<svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-          {% elif s.icon == 'tiktok' %}<svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z"/></svg>
-          {% elif s.icon == 'twitter' %}<svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          {% elif s.icon == 'youtube' %}<svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-          {% elif s.icon == 'onlyfans' %}<svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 4.5a7.5 7.5 0 110 15 7.5 7.5 0 010-15zm0 2a5.5 5.5 0 100 11 5.5 5.5 0 000-11z"/></svg>
-          {% endif %}
-        </a>
-        {% endfor %}
-      </div>
-      {% endif %}
-    </div>
   </div>
 
-  <div class="cards">
+  <!-- CONTENT -->
+  <div class="content">
+    <div class="name">{{ name }}</div>
+    {% if subtitle %}<div class="subtitle">{{ subtitle }}</div>{% endif %}
 
-    {% if banner_url and tg_link %}
-    <a href="{{ tg_link }}" class="card-main" target="_blank" rel="noopener"
-       onclick="gtag('event', 'click', {event_category: 'banner', event_label: 'main_banner'})">
-      <img src="{{ banner_url }}" alt="">
-      <div class="card-link-icon">
-        <svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
-      </div>
-      <div class="play-btn">
-        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-      </div>
-      <div class="card-label">{{ banner_text }}</div>
+    <a href="{{ cta_link }}" class="cta-btn" target="_blank" rel="noopener"
+       onclick="gtag('event', 'click', {event_category: 'cta', event_label: 'exclusive_content'})">
+      {{ cta_text }}
+      <span class="arrow">
+        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+      </span>
     </a>
-    {% endif %}
 
-    {% if photo1 or photo2 %}
-    <div class="cards-row">
-      {% if photo1 %}
-      <a href="{{ tg_link }}" class="card-small" target="_blank" rel="noopener"
-         onclick="gtag('event', 'click', {event_category: 'banner', event_label: 'photo1'})">
-        <img src="{{ photo1 }}" alt="">
-        <div class="card-platform-icon instagram">
-          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-        </div>
-        <div class="card-label">{{ photo1_text if photo1_text else 'my entire life 💕' }}</div>
-      </a>
-      {% endif %}
-      {% if photo2 %}
-      <a href="{{ photo2_link if photo2_link else tg_link }}" class="card-small" target="_blank" rel="noopener"
-         onclick="gtag('event', 'click', {event_category: 'banner', event_label: 'photo2'})">
-        <img src="{{ photo2 }}" alt="">
-        <div class="card-link-icon">
-          <svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
-        </div>
-        <div class="card-label">{{ photo2_text if photo2_text else 'come have some fun 😊' }}</div>
-      </a>
-      {% endif %}
+    <div class="urgency">Hurry up and subscribe!</div>
+
+    <div class="timer-box">
+      <div class="timer-unit">
+        <div class="timer-num" id="hours">00</div>
+        <div class="timer-label">Hours</div>
+      </div>
+      <div class="timer-sep">:</div>
+      <div class="timer-unit">
+        <div class="timer-num" id="minutes">10</div>
+        <div class="timer-label">Minutes</div>
+      </div>
+      <div class="timer-sep">:</div>
+      <div class="timer-unit">
+        <div class="timer-num" id="seconds">00</div>
+        <div class="timer-label">Seconds</div>
+      </div>
     </div>
-    {% endif %}
-
   </div>
+
+  <script>
+    // Timer: 10 minutes from page load
+    var DURATION = 10 * 60;
+    var remaining = DURATION;
+
+    function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+    function tick() {
+      if (remaining <= 0) {
+        document.getElementById('hours').textContent = '00';
+        document.getElementById('minutes').textContent = '00';
+        document.getElementById('seconds').textContent = '00';
+        return;
+      }
+      var h = Math.floor(remaining / 3600);
+      var m = Math.floor((remaining % 3600) / 60);
+      var s = remaining % 60;
+      document.getElementById('hours').textContent = pad(h);
+      document.getElementById('minutes').textContent = pad(m);
+      document.getElementById('seconds').textContent = pad(s);
+      remaining--;
+    }
+
+    tick();
+    setInterval(tick, 1000);
+  </script>
 
 </body>
 </html>
