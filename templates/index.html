@@ -155,7 +155,7 @@
       position: fixed;
       inset: 0;
       z-index: 100;
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: center;
       padding: 20px;
@@ -163,7 +163,7 @@
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
     }
-    .age-modal.hidden { display: none; }
+    .age-modal.visible { display: flex; }
 
     .age-card {
       width: 100%;
@@ -245,7 +245,7 @@
   </div>
 
   <!-- AGE GATE MODAL -->
-  <div class="age-modal" id="ageModal">
+  <div class="age-modal" id="ageModal" onclick="if(event.target===this) hideModal()">
     <div class="age-card">
       <div class="age-icon">🔞</div>
       <div class="age-title">Adult Content</div>
@@ -260,13 +260,12 @@
     <div class="name">{{ name }}</div>
     {% if subtitle %}<div class="subtitle">{{ subtitle }}</div>{% endif %}
 
-    <a id="ctaBtn" href="{{ cta_link }}" class="cta-btn" target="_blank" rel="noopener"
-       onclick="gtag('event', 'click', {event_category: 'cta', event_label: 'exclusive_content'})">
+    <div id="ctaBtn" class="cta-btn" onclick="showAgeGate()">
       {{ cta_text }}
       <span class="arrow">
         <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
       </span>
-    </a>
+    </div>
 
     <div class="urgency">Hurry up and subscribe!</div>
 
@@ -289,16 +288,29 @@
   </div>
 
   <script>
+    var ctaLink = "{{ cta_link }}";
+
+    function showAgeGate() {
+      var btn = document.getElementById('ctaBtn');
+      if (btn.classList.contains('disabled')) return;
+      document.getElementById('ageModal').classList.add('visible');
+      gtag('event', 'click', {event_category: 'cta', event_label: 'exclusive_content'});
+    }
+
+    function hideModal() {
+      document.getElementById('ageModal').classList.remove('visible');
+    }
+
     function ageYes() {
-      document.getElementById('ageModal').classList.add('hidden');
+      hideModal();
       gtag('event', 'age_confirm', {event_category: 'age_gate', event_label: 'yes'});
+      window.open(ctaLink, '_blank');
     }
 
     function ageNo() {
-      document.getElementById('ageModal').classList.add('hidden');
+      hideModal();
       var btn = document.getElementById('ctaBtn');
       btn.classList.add('disabled');
-      btn.removeAttribute('href');
       gtag('event', 'age_confirm', {event_category: 'age_gate', event_label: 'no'});
     }
 
