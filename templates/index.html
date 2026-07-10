@@ -20,7 +20,6 @@
       justify-content: center;
     }
 
-    /* FULLSCREEN BG */
     .bg {
       position: fixed;
       inset: 0;
@@ -32,7 +31,6 @@
       object-fit: cover;
       display: block;
     }
-    /* dark overlay */
     .bg::after {
       content: '';
       position: absolute;
@@ -40,7 +38,6 @@
       background: rgba(0,0,0,0.45);
     }
 
-    /* CONTENT */
     .content {
       position: relative;
       z-index: 2;
@@ -50,7 +47,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0;
     }
 
     .name {
@@ -70,7 +66,6 @@
       text-shadow: 0 1px 8px rgba(0,0,0,0.5);
     }
 
-    /* BUTTON */
     .cta-btn {
       display: flex;
       align-items: center;
@@ -88,28 +83,23 @@
       font-weight: 600;
       margin-bottom: 24px;
       transition: background 0.2s, transform 0.15s;
+      cursor: pointer;
     }
-    .cta-btn:active {
-      background: rgba(255,255,255,0.25);
-      transform: scale(0.98);
+    .cta-btn:active { background: rgba(255,255,255,0.25); transform: scale(0.98); }
+    .cta-btn.disabled {
+      opacity: 0.35;
+      pointer-events: none;
+      cursor: not-allowed;
     }
     .cta-btn .arrow {
-      width: 28px;
-      height: 28px;
+      width: 28px; height: 28px;
       background: rgba(255,255,255,0.2);
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
-    .cta-btn .arrow svg {
-      width: 14px;
-      height: 14px;
-      fill: #fff;
-    }
+    .cta-btn .arrow svg { width: 14px; height: 14px; fill: #fff; }
 
-    /* URGENCY TEXT */
     .urgency {
       font-size: 13px;
       color: rgba(255,255,255,0.7);
@@ -120,7 +110,6 @@
       font-weight: 500;
     }
 
-    /* TIMER */
     .timer-box {
       width: 100%;
       background: rgba(255,255,255,0.12);
@@ -132,9 +121,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0;
     }
-
     .timer-unit {
       display: flex;
       flex-direction: column;
@@ -162,6 +149,81 @@
       margin: 0 4px;
       padding-bottom: 8px;
     }
+
+    /* AGE GATE MODAL */
+    .age-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    .age-modal.hidden { display: none; }
+
+    .age-card {
+      width: 100%;
+      max-width: 360px;
+      background: rgba(20,20,20,0.95);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 24px;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .age-icon {
+      font-size: 40px;
+      margin-bottom: 4px;
+    }
+
+    .age-title {
+      font-size: 20px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .age-subtitle {
+      font-size: 14px;
+      color: rgba(255,255,255,0.55);
+      text-align: center;
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+
+    .age-yes {
+      width: 100%;
+      padding: 16px;
+      background: #fff;
+      color: #000;
+      font-size: 16px;
+      font-weight: 700;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    .age-yes:active { opacity: 0.85; transform: scale(0.98); }
+
+    .age-no {
+      width: 100%;
+      padding: 16px;
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.6);
+      font-size: 16px;
+      font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .age-no:active { opacity: 0.7; }
   </style>
 
   {% if ga_id %}
@@ -182,12 +244,23 @@
     {% endif %}
   </div>
 
+  <!-- AGE GATE MODAL -->
+  <div class="age-modal" id="ageModal">
+    <div class="age-card">
+      <div class="age-icon">🔞</div>
+      <div class="age-title">Adult Content</div>
+      <div class="age-subtitle">This page contains adult content. Please confirm your age to continue.</div>
+      <button class="age-yes" onclick="ageYes()">Yes, I am 18+</button>
+      <button class="age-no" onclick="ageNo()">No, I am under 18</button>
+    </div>
+  </div>
+
   <!-- CONTENT -->
   <div class="content">
     <div class="name">{{ name }}</div>
     {% if subtitle %}<div class="subtitle">{{ subtitle }}</div>{% endif %}
 
-    <a href="{{ cta_link }}" class="cta-btn" target="_blank" rel="noopener"
+    <a id="ctaBtn" href="{{ cta_link }}" class="cta-btn" target="_blank" rel="noopener"
        onclick="gtag('event', 'click', {event_category: 'cta', event_label: 'exclusive_content'})">
       {{ cta_text }}
       <span class="arrow">
@@ -216,7 +289,20 @@
   </div>
 
   <script>
-    // Timer: 10 minutes from page load
+    function ageYes() {
+      document.getElementById('ageModal').classList.add('hidden');
+      gtag('event', 'age_confirm', {event_category: 'age_gate', event_label: 'yes'});
+    }
+
+    function ageNo() {
+      document.getElementById('ageModal').classList.add('hidden');
+      var btn = document.getElementById('ctaBtn');
+      btn.classList.add('disabled');
+      btn.removeAttribute('href');
+      gtag('event', 'age_confirm', {event_category: 'age_gate', event_label: 'no'});
+    }
+
+    // Timer
     var DURATION = 10 * 60;
     var remaining = DURATION;
 
