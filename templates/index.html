@@ -86,11 +86,6 @@
       cursor: pointer;
     }
     .cta-btn:active { background: rgba(255,255,255,0.25); transform: scale(0.98); }
-    .cta-btn.disabled {
-      opacity: 0.35;
-      pointer-events: none;
-      cursor: not-allowed;
-    }
     .cta-btn .arrow {
       width: 28px; height: 28px;
       background: rgba(255,255,255,0.2);
@@ -121,6 +116,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-bottom: 16px;
     }
     .timer-unit {
       display: flex;
@@ -150,80 +146,21 @@
       padding-bottom: 8px;
     }
 
-    /* AGE GATE MODAL */
-    .age-modal {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
+    /* OPEN IN BROWSER BANNER — показывается только в Instagram */
+    .open-in-browser {
       display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      background: rgba(0,0,0,0.75);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-    }
-    .age-modal.visible { display: flex; }
-
-    .age-card {
       width: 100%;
-      max-width: 360px;
-      background: rgba(20,20,20,0.95);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 24px;
-      padding: 32px 24px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .age-icon {
-      font-size: 40px;
-      margin-bottom: 4px;
-    }
-
-    .age-title {
-      font-size: 20px;
-      font-weight: 700;
-      text-align: center;
-    }
-
-    .age-subtitle {
-      font-size: 14px;
-      color: rgba(255,255,255,0.55);
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
       text-align: center;
       line-height: 1.5;
-      margin-bottom: 8px;
     }
-
-    .age-yes {
-      width: 100%;
-      padding: 16px;
-      background: #fff;
-      color: #000;
-      font-size: 16px;
-      font-weight: 700;
-      border: none;
-      border-radius: 14px;
-      cursor: pointer;
-      transition: opacity 0.15s, transform 0.15s;
-    }
-    .age-yes:active { opacity: 0.85; transform: scale(0.98); }
-
-    .age-no {
-      width: 100%;
-      padding: 16px;
-      background: rgba(255,255,255,0.08);
-      color: rgba(255,255,255,0.6);
-      font-size: 16px;
-      font-weight: 600;
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 14px;
-      cursor: pointer;
-      transition: opacity 0.15s;
-    }
-    .age-no:active { opacity: 0.7; }
+    .open-in-browser.show { display: block; }
+    .open-in-browser strong { color: #fff; }
   </style>
 
   {% if ga_id %}
@@ -233,7 +170,6 @@
 </head>
 <body>
 
-  <!-- FULLSCREEN BG -->
   <div class="bg">
     {% if hero_url %}
       {% if hero_url.endswith('.mp4') or hero_url.endswith('.webm') or hero_url.endswith('.mov') %}
@@ -244,28 +180,17 @@
     {% endif %}
   </div>
 
-  <!-- AGE GATE MODAL -->
-  <div class="age-modal" id="ageModal" onclick="if(event.target===this) hideModal()">
-    <div class="age-card">
-      <div class="age-icon">🔞</div>
-      <div class="age-title">Adult Content</div>
-      <div class="age-subtitle">This page contains adult content. Please confirm your age to continue.</div>
-      <button class="age-yes" onclick="ageYes()">Yes, I am 18+</button>
-      <button class="age-no" onclick="ageNo()">No, I am under 18</button>
-    </div>
-  </div>
-
-  <!-- CONTENT -->
   <div class="content">
     <div class="name">{{ name }}</div>
     {% if subtitle %}<div class="subtitle">{{ subtitle }}</div>{% endif %}
 
-    <div id="ctaBtn" class="cta-btn" onclick="showAgeGate()">
+    <a href="{{ cta_link }}" class="cta-btn" id="ctaBtn" target="_blank" rel="noopener"
+       onclick="gtag('event', 'click', {event_category: 'cta', event_label: 'exclusive_content'})">
       {{ cta_text }}
       <span class="arrow">
         <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
       </span>
-    </div>
+    </a>
 
     <div class="urgency">Hurry up and subscribe!</div>
 
@@ -285,33 +210,21 @@
         <div class="timer-label">Seconds</div>
       </div>
     </div>
+
+    <!-- Показывается только если пользователь в Instagram -->
+    <div class="open-in-browser" id="openInBrowser">
+      <strong>Open in browser for best experience</strong><br>
+      Tap <strong>⋯</strong> → <strong>Open in Safari</strong> (iOS) or <strong>Open in Chrome</strong> (Android)
+    </div>
   </div>
 
   <script>
-    var ctaLink = "{{ cta_link }}";
+    // Определяем Instagram браузер
+    var ua = navigator.userAgent || '';
+    var isInstagram = ua.indexOf('Instagram') > -1;
 
-    function showAgeGate() {
-      var btn = document.getElementById('ctaBtn');
-      if (btn.classList.contains('disabled')) return;
-      document.getElementById('ageModal').classList.add('visible');
-      gtag('event', 'click', {event_category: 'cta', event_label: 'exclusive_content'});
-    }
-
-    function hideModal() {
-      document.getElementById('ageModal').classList.remove('visible');
-    }
-
-    function ageYes() {
-      hideModal();
-      gtag('event', 'age_confirm', {event_category: 'age_gate', event_label: 'yes'});
-      window.open(ctaLink, '_blank');
-    }
-
-    function ageNo() {
-      hideModal();
-      var btn = document.getElementById('ctaBtn');
-      btn.classList.add('disabled');
-      gtag('event', 'age_confirm', {event_category: 'age_gate', event_label: 'no'});
+    if (isInstagram) {
+      document.getElementById('openInBrowser').classList.add('show');
     }
 
     // Timer
