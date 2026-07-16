@@ -1,6 +1,6 @@
 import os
 import requests
-from flask import Flask, render_template, request, jsonify, redirect
+from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
@@ -23,22 +23,17 @@ def get_client_ip():
 def index():
     ip = get_client_ip()
     country = get_country(ip)
-
-    main_link    = os.environ.get("MAIN_LINK", "")      # разрешённое гео
-    fallback_link = os.environ.get("FALLBACK_LINK", "") # всё остальное
-
-    if country in ALLOWED_GEO:
-        cta_link = main_link
-    else:
-        cta_link = fallback_link
+    allowed = country in ALLOWED_GEO
 
     context = {
-        "name":     os.environ.get("SITE_NAME", "Lily"),
-        "subtitle": os.environ.get("SITE_SUBTITLE", "Check my exclusive content ❤️"),
+        "name":     os.environ.get("SITE_NAME", "Model Name"),
+        "subtitle": os.environ.get("SITE_SUBTITLE", ""),
         "hero_url": os.environ.get("HERO_URL", ""),
         "cta_text": os.environ.get("CTA_TEXT", "Exclusive content here"),
-        "cta_link": cta_link,
+        "cta_link": os.environ.get("MAIN_LINK", ""),
+        "tg_link":  os.environ.get("TG_LINK", ""),
         "ga_id":    os.environ.get("GA_ID", ""),
+        "allowed":  allowed,
     }
     return render_template("index.html", **context)
 
