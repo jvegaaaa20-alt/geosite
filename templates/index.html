@@ -30,6 +30,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      gap: 12px;
     }
     .name {
       font-size: 42px;
@@ -43,7 +44,7 @@
       font-size: 15px;
       color: rgba(255,255,255,0.75);
       text-align: center;
-      margin-bottom: 32px;
+      margin-bottom: 20px;
       text-shadow: 0 1px 8px rgba(0,0,0,0.5);
     }
     .cta-btn {
@@ -61,6 +62,7 @@
       color: #fff;
       font-size: 17px;
       font-weight: 600;
+      cursor: pointer;
       transition: background 0.2s, transform 0.15s;
     }
     .cta-btn:active { background: rgba(255,255,255,0.25); transform: scale(0.98); }
@@ -72,15 +74,18 @@
       flex-shrink: 0;
     }
     .cta-btn .arrow svg { width: 14px; height: 14px; fill: #fff; }
+    .cta-btn.secondary {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.15);
+    }
+    .cta-btn.secondary:active { background: rgba(255,255,255,0.15); }
   </style>
-
   {% if ga_id %}
   <script async src="https://www.googletagmanager.com/gtag/js?id={{ ga_id }}"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","{{ ga_id }}");</script>
   {% endif %}
 </head>
 <body>
-
   <div class="bg">
     {% if hero_url %}
       {% if hero_url.endswith('.mp4') or hero_url.endswith('.webm') or hero_url.endswith('.mov') %}
@@ -95,14 +100,29 @@
     <div class="name">{{ name }}</div>
     {% if subtitle %}<div class="subtitle">{{ subtitle }}</div>{% endif %}
 
-    <a href="{{ cta_link }}" class="cta-btn" target="_blank" rel="noopener"
-       onclick="gtag('event', 'click', {event_category: 'cta', event_label: 'exclusive_content'})">
+    <div class="cta-btn" onclick="handleClick('{{ cta_link }}', 'main_button')">
       {{ cta_text }}
       <span class="arrow">
         <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
       </span>
-    </a>
+    </div>
+
+    <div class="cta-btn secondary" onclick="handleClick('{{ tg_link }}', 'telegram_button')">
+      My Telegram channel
+      <span class="arrow">
+        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+      </span>
+    </div>
   </div>
 
+  <script>
+    var allowed = {{ 'true' if allowed else 'false' }};
+
+    function handleClick(url, label) {
+      if (!allowed) return;
+      gtag('event', 'click', {event_category: 'cta', event_label: label});
+      window.open(url, '_blank');
+    }
+  </script>
 </body>
 </html>
