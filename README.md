@@ -21,7 +21,8 @@
 | Cloudinary | Хостинг видео | [cloudinary.com](https://cloudinary.com) |
 | imgbb | Хостинг фото | [imgbb.com](https://imgbb.com) |
 | Namecheap | Купить домен | [namecheap.com](https://namecheap.com) |
-| Google Analytics | Аналитика | [analytics.google.com](https://analytics.google.com) |
+| Google Analytics | Базовая аналитика | [analytics.google.com](https://analytics.google.com) |
+| Microsoft Clarity | Записи сессий и тепловые карты | [clarity.microsoft.com](https://clarity.microsoft.com) |
 
 ---
 
@@ -108,6 +109,7 @@ MAIN_LINK=https://t.me/+твоя_ссылка
 FALLBACK_LINK=https://t.me/+твоя_ссылка
 ALLOWED_GEO=US,GB,CA,AU,DE,FR,IT,NL,CH,AT,SE,NO,DK,FI,PT
 GA_ID=
+CLARITY_ID=
 ```
 
 **Описание каждой переменной:**
@@ -122,14 +124,17 @@ GA_ID=
 | `FALLBACK_LINK` | Ссылка для всех остальных (можно ту же) | `https://t.me/+xxxxxxx` |
 | `ALLOWED_GEO` | Страны через запятую (коды ISO) | `US,GB,CA,AU,DE,FR` |
 | `GA_ID` | Google Analytics ID (необязательно) | `G-XXXXXXXXXX` |
+| `CLARITY_ID` | Microsoft Clarity ID (необязательно) | `xxxxxxxxxx` |
 
 После заполнения нажми **Deploy** — сайт обновится автоматически.
 
 ---
 
-## Шаг 5 — Настрой Google Analytics (необязательно)
+## Шаг 5 — Настрой аналитику
 
-Нужно если хочешь видеть откуда приходит трафик, какие страны, сколько кликов по кнопке.
+### Google Analytics (базовая аналитика)
+
+Показывает трафик, гео, устройства, клики по кнопкам.
 
 1. Зайди на [analytics.google.com](https://analytics.google.com)
 2. Нажми **Создать** → **Аккаунт** → придумай название
@@ -138,13 +143,25 @@ GA_ID=
 5. Скопируй **Идентификатор** вида `G-XXXXXXXXXX`
 6. Вставь его в Railway переменную `GA_ID`
 
-**Что отслеживается автоматически:**
-- Количество посетителей
-- Страны откуда приходят
-- Устройства (телефон/компьютер)
-- Клики по кнопке (событие `click → button`)
+### Microsoft Clarity (записи сессий — рекомендуется)
 
-Данные появятся в GA4 через 24-48 часов после первых визитов.
+Показывает как именно пользователи взаимодействуют с сайтом. Бесплатно навсегда.
+
+**Что даёт Clarity:**
+- Записи сессий — видишь каждый визит как видео
+- Тепловые карты — где кликают чаще всего
+- Гео, устройства, браузеры
+- Время на сайте и процент выхода
+- Клики по кнопкам
+
+**Как подключить:**
+1. Зайди на [clarity.microsoft.com](https://clarity.microsoft.com) → войди через Microsoft или Google
+2. Нажми **New project** → введи название и URL сайта
+3. Выбери **Install manually**
+4. Скопируй ID из кода — это строка вида `xxxxxxxxxx` в конце скрипта
+5. Вставь его в Railway переменную `CLARITY_ID`
+
+> GA4 и Clarity можно использовать одновременно — они не конфликтуют. Если переменная пустая — соответствующий сервис просто не подключится.
 
 ---
 
@@ -204,12 +221,12 @@ DE, FR, NL, CH, AT, SE, NO, DK, FI, BE, IE
 
 **Дополнительно:**
 ```
-JP, KR, PT, ES, IT, SG, NZ
+JP, KR, PT, ES, IT, SG, NZ, CY, GR
 ```
 
 **Пример для максимального охвата:**
 ```
-ALLOWED_GEO=US,GB,CA,AU,DE,FR,IT,NL,CH,AT,SE,NO,DK,FI,PT,JP,KR,BE,IE,SG,NZ
+ALLOWED_GEO=US,GB,CA,AU,DE,FR,IT,NL,CH,AT,SE,NO,DK,FI,PT,JP,KR,BE,IE,SG,NZ,CY,GR
 ```
 
 ---
@@ -260,3 +277,6 @@ Railway выдаёт SSL автоматически — подожди 10-30 м�
 
 **Как поменять текст или дизайн?**
 Редактируй файл `templates/index.html` прямо на GitHub — Railway обновит сайт автоматически.
+
+**Clarity или GA4 — что выбрать?**
+Используй оба одновременно. GA4 для цифр и трафика, Clarity для понимания поведения пользователей.
